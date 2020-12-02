@@ -1,0 +1,191 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">speech_recognition </span><span class="s0">as </span><span class="s1">sr</span>
+<span class="s0">import </span><span class="s1">pyttsx3</span>
+<span class="s0">import </span><span class="s1">datetime</span>
+<span class="s0">import </span><span class="s1">wikipedia</span>
+<span class="s0">import </span><span class="s1">webbrowser</span>
+<span class="s0">import </span><span class="s1">os</span>
+<span class="s0">import </span><span class="s1">time</span>
+<span class="s0">import </span><span class="s1">subprocess</span>
+<span class="s0">import </span><span class="s1">json</span>
+<span class="s0">import </span><span class="s1">requests</span>
+<span class="s0">from </span><span class="s1">ecapture </span><span class="s0">import </span><span class="s1">ecapture </span><span class="s0">as </span><span class="s1">ec</span>
+<span class="s0">import </span><span class="s1">wolframalpha</span>
+
+<span class="s1">print(</span><span class="s2">'Loading your AI personal assistant - Yong'</span><span class="s1">)</span>
+
+<span class="s1">engine = pyttsx3.init(</span><span class="s2">'sapi5'</span><span class="s1">)</span>
+<span class="s1">voices = engine.getProperty(</span><span class="s2">'voices'</span><span class="s1">)</span>
+<span class="s1">engine.setProperty(</span><span class="s2">'voice'</span><span class="s0">, </span><span class="s2">'voices[0].id'</span><span class="s1">)</span>
+
+
+<span class="s0">def </span><span class="s1">speak(text):</span>
+    <span class="s1">engine.say(text)</span>
+    <span class="s1">engine.runAndWait()</span>
+
+
+<span class="s0">def </span><span class="s1">wishMe():</span>
+    <span class="s1">hour = datetime.datetime.now().hour</span>
+    <span class="s0">if </span><span class="s1">hour &gt;= </span><span class="s3">0 </span><span class="s0">and </span><span class="s1">hour &lt; </span><span class="s3">12</span><span class="s1">:</span>
+        <span class="s1">speak(</span><span class="s2">&quot;Good Morning&quot;</span><span class="s1">)</span>
+        <span class="s1">print(</span><span class="s2">&quot;Good Morning&quot;</span><span class="s1">)</span>
+    <span class="s0">elif </span><span class="s1">hour &gt;= </span><span class="s3">12 </span><span class="s0">and </span><span class="s1">hour &lt; </span><span class="s3">18</span><span class="s1">:</span>
+        <span class="s1">speak(</span><span class="s2">&quot;Good Afternoon&quot;</span><span class="s1">)</span>
+        <span class="s1">print(</span><span class="s2">&quot;Good Afternoon&quot;</span><span class="s1">)</span>
+    <span class="s0">else</span><span class="s1">:</span>
+        <span class="s1">speak(</span><span class="s2">&quot;Good Evening&quot;</span><span class="s1">)</span>
+        <span class="s1">print(</span><span class="s2">&quot;Good Evening&quot;</span><span class="s1">)</span>
+
+
+<span class="s0">def </span><span class="s1">takeCommand():</span>
+    <span class="s1">r = sr.Recognizer()</span>
+    <span class="s0">with </span><span class="s1">sr.Microphone() </span><span class="s0">as </span><span class="s1">source:</span>
+        <span class="s1">print(</span><span class="s2">&quot;I'm Listening...&quot;</span><span class="s1">)</span>
+        <span class="s1">audio = r.listen(source)</span>
+
+        <span class="s0">try</span><span class="s1">:</span>
+            <span class="s1">statement = r.recognize_google(audio</span><span class="s0">, </span><span class="s1">language=</span><span class="s2">'en-in'</span><span class="s1">)</span>
+            <span class="s1">print(</span><span class="s2">f&quot;user said:</span><span class="s0">{</span><span class="s1">statement</span><span class="s0">}\n</span><span class="s2">&quot;</span><span class="s1">)</span>
+
+        <span class="s0">except </span><span class="s1">Exception </span><span class="s0">as </span><span class="s1">e:</span>
+            <span class="s1">speak(</span><span class="s2">&quot;Sorry, I didn't catch that. Say that again&quot;</span><span class="s1">)</span>
+            <span class="s0">return </span><span class="s2">&quot;None&quot;</span>
+        <span class="s0">return </span><span class="s1">statement</span>
+
+
+<span class="s1">speak(</span><span class="s2">&quot;Loading your AI personal assistant, Yong&quot;</span><span class="s1">)</span>
+<span class="s1">wishMe()</span>
+
+<span class="s0">if </span><span class="s1">__name__ == </span><span class="s2">'__main__'</span><span class="s1">:</span>
+
+    <span class="s0">while True</span><span class="s1">:</span>
+        <span class="s1">speak(</span><span class="s2">&quot;How can I help you?&quot;</span><span class="s1">)</span>
+        <span class="s1">statement = takeCommand().lower()</span>
+        <span class="s0">if </span><span class="s1">statement == </span><span class="s3">0</span><span class="s1">:</span>
+            <span class="s0">continue</span>
+
+        <span class="s0">if </span><span class="s2">&quot;good bye&quot; </span><span class="s0">in </span><span class="s1">statement </span><span class="s0">or </span><span class="s2">&quot;ok bye&quot; </span><span class="s0">in </span><span class="s1">statement </span><span class="s0">or </span><span class="s2">&quot;stop&quot; </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">speak(</span><span class="s2">'your personal assistant Yong is shutting down,Good bye'</span><span class="s1">)</span>
+            <span class="s1">print(</span><span class="s2">'your personal assistant Yong is shutting down,Good bye'</span><span class="s1">)</span>
+            <span class="s0">break</span>
+
+        <span class="s0">if </span><span class="s2">'wikipedia' </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">speak(</span><span class="s2">'Searching Wikipedia...'</span><span class="s1">)</span>
+            <span class="s1">statement = statement.replace(</span><span class="s2">&quot;wikipedia&quot;</span><span class="s0">, </span><span class="s2">&quot;&quot;</span><span class="s1">)</span>
+            <span class="s1">results = wikipedia.summary(statement</span><span class="s0">, </span><span class="s1">sentences=</span><span class="s3">3</span><span class="s1">)</span>
+            <span class="s1">speak(</span><span class="s2">&quot;According to Wikipedia&quot;</span><span class="s1">)</span>
+            <span class="s1">print(results)</span>
+            <span class="s1">speak(results)</span>
+
+        <span class="s0">elif </span><span class="s2">'open youtube' </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">webbrowser.open_new_tab(</span><span class="s2">&quot;https://www.youtube.com&quot;</span><span class="s1">)</span>
+            <span class="s1">speak(</span><span class="s2">&quot;youtube is open now&quot;</span><span class="s1">)</span>
+            <span class="s1">time.sleep(</span><span class="s3">5</span><span class="s1">)</span>
+
+        <span class="s0">elif </span><span class="s2">'open google' </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">webbrowser.open_new_tab(</span><span class="s2">&quot;https://www.google.com&quot;</span><span class="s1">)</span>
+            <span class="s1">speak(</span><span class="s2">&quot;Google chrome is open now&quot;</span><span class="s1">)</span>
+            <span class="s1">time.sleep(</span><span class="s3">5</span><span class="s1">)</span>
+
+        <span class="s0">elif </span><span class="s2">'open gmail' </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">webbrowser.open_new_tab(</span><span class="s2">&quot;gmail.com&quot;</span><span class="s1">)</span>
+            <span class="s1">speak(</span><span class="s2">&quot;Google Mail open now&quot;</span><span class="s1">)</span>
+            <span class="s1">time.sleep(</span><span class="s3">5</span><span class="s1">)</span>
+
+        <span class="s0">elif </span><span class="s2">&quot;weather&quot; </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">api_key = </span><span class="s2">&quot;8ef61edcf1c576d65d836254e11ea420&quot;</span>
+            <span class="s1">base_url = </span><span class="s2">&quot;https://api.openweathermap.org/data/2.5/weather?&quot;</span>
+            <span class="s1">speak(</span><span class="s2">&quot;whats the city name&quot;</span><span class="s1">)</span>
+            <span class="s1">city_name = takeCommand()</span>
+            <span class="s1">complete_url = base_url + </span><span class="s2">&quot;appid=&quot; </span><span class="s1">+ api_key + </span><span class="s2">&quot;&amp;q=&quot; </span><span class="s1">+ city_name</span>
+            <span class="s1">response = requests.get(complete_url)</span>
+            <span class="s1">x = response.json()</span>
+            <span class="s0">if </span><span class="s1">x[</span><span class="s2">&quot;cod&quot;</span><span class="s1">] != </span><span class="s2">&quot;404&quot;</span><span class="s1">:</span>
+                <span class="s1">y = x[</span><span class="s2">&quot;main&quot;</span><span class="s1">]</span>
+                <span class="s1">current_temperature = y[</span><span class="s2">&quot;temp&quot;</span><span class="s1">]</span>
+                <span class="s1">current_humidity = y[</span><span class="s2">&quot;humidity&quot;</span><span class="s1">]</span>
+                <span class="s1">z = x[</span><span class="s2">&quot;weather&quot;</span><span class="s1">]</span>
+                <span class="s1">weather_description = z[</span><span class="s3">0</span><span class="s1">][</span><span class="s2">&quot;description&quot;</span><span class="s1">]</span>
+                <span class="s1">speak(</span><span class="s2">&quot; Temperature in kelvin unit is &quot; </span><span class="s1">+</span>
+                      <span class="s1">str(current_temperature) +</span>
+                      <span class="s2">&quot;</span><span class="s0">\n </span><span class="s2">humidity in percentage is &quot; </span><span class="s1">+</span>
+                      <span class="s1">str(current_humidity) +</span>
+                      <span class="s2">&quot;</span><span class="s0">\n </span><span class="s2">description  &quot; </span><span class="s1">+</span>
+                      <span class="s1">str(weather_description))</span>
+                <span class="s1">print(</span><span class="s2">&quot; Temperature in kelvin unit = &quot; </span><span class="s1">+</span>
+                      <span class="s1">str(current_temperature) +</span>
+                      <span class="s2">&quot;</span><span class="s0">\n </span><span class="s2">humidity (in percentage) = &quot; </span><span class="s1">+</span>
+                      <span class="s1">str(current_humidity) +</span>
+                      <span class="s2">&quot;</span><span class="s0">\n </span><span class="s2">description = &quot; </span><span class="s1">+</span>
+                      <span class="s1">str(weather_description))</span>
+
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s1">speak(</span><span class="s2">&quot; City Not Found &quot;</span><span class="s1">)</span>
+
+
+
+        <span class="s0">elif </span><span class="s2">'time' </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">strTime = datetime.datetime.now().strftime(</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="s1">)</span>
+            <span class="s1">speak(</span><span class="s2">f&quot;the time is </span><span class="s0">{</span><span class="s1">strTime</span><span class="s0">}</span><span class="s2">&quot;</span><span class="s1">)</span>
+
+        <span class="s0">elif </span><span class="s2">'who are you' </span><span class="s0">in </span><span class="s1">statement </span><span class="s0">or </span><span class="s2">'what can you do' </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">speak(</span><span class="s2">'I am Yong, your personal assistant. My purpose is to assist the vulnerable and elderly.'</span>
+                  <span class="s2">' I can open youtube, google chrome, g mail and tell you BBC news headlines and much more! '</span><span class="s1">)</span>
+
+
+        <span class="s0">elif </span><span class="s2">&quot;who made you&quot; </span><span class="s0">in </span><span class="s1">statement </span><span class="s0">or </span><span class="s2">&quot;who created you&quot; </span><span class="s0">in </span><span class="s1">statement </span><span class="s0">or </span><span class="s2">&quot;who discovered you&quot; </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">speak(</span><span class="s2">&quot;I was built by Khadijah&quot;</span><span class="s1">)</span>
+            <span class="s1">print(</span><span class="s2">&quot;I was built by Khadijah&quot;</span><span class="s1">)</span>
+
+        <span class="s0">elif </span><span class="s2">&quot;open stackoverflow&quot; </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">webbrowser.open_new_tab(</span><span class="s2">&quot;https://stackoverflow.com/login&quot;</span><span class="s1">)</span>
+            <span class="s1">speak(</span><span class="s2">&quot;Here is stackoverflow&quot;</span><span class="s1">)</span>
+
+        <span class="s0">elif </span><span class="s2">'news' </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">news = webbrowser.open_new_tab(</span><span class="s2">&quot;https://https://www.bbc.co.uk/news&quot;</span><span class="s1">)</span>
+            <span class="s1">speak(</span><span class="s2">'Here are some headlines from BBC News'</span><span class="s1">)</span>
+            <span class="s1">time.sleep(</span><span class="s3">6</span><span class="s1">)</span>
+
+        <span class="s0">elif </span><span class="s2">&quot;camera&quot; </span><span class="s0">in </span><span class="s1">statement </span><span class="s0">or </span><span class="s2">&quot;take a photo&quot; </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">ec.capture(</span><span class="s3">0</span><span class="s0">, </span><span class="s2">&quot;False&quot;</span><span class="s0">, </span><span class="s2">&quot;img.jpg&quot;</span><span class="s1">)</span>
+
+        <span class="s0">elif </span><span class="s2">'search' </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">statement = statement.replace(</span><span class="s2">&quot;search&quot;</span><span class="s0">, </span><span class="s2">&quot;&quot;</span><span class="s1">)</span>
+            <span class="s1">webbrowser.open_new_tab(statement)</span>
+            <span class="s1">time.sleep(</span><span class="s3">5</span><span class="s1">)</span>
+
+        <span class="s0">elif </span><span class="s2">'ask' </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">speak(</span><span class="s2">'I could answer some pretty complicated questions'</span><span class="s1">)</span>
+            <span class="s1">question = takeCommand()</span>
+            <span class="s1">app_id = </span><span class="s2">&quot;6PXRVR-QK3496H5A3&quot;</span>
+            <span class="s1">client = wolframalpha.Client(</span><span class="s2">'6PXRVR-QK3496H5A3'</span><span class="s1">)</span>
+            <span class="s1">res = client.query(question)</span>
+            <span class="s1">answer = next(res.results).text</span>
+            <span class="s1">speak(answer)</span>
+            <span class="s1">print(answer)</span>
+
+
+        <span class="s0">elif </span><span class="s2">&quot;log off&quot; </span><span class="s0">in </span><span class="s1">statement </span><span class="s0">or </span><span class="s2">&quot;sign out&quot; </span><span class="s0">in </span><span class="s1">statement:</span>
+            <span class="s1">speak(</span><span class="s2">&quot;Ok , your pc will log off in 10 sec make sure you exit from all applications&quot;</span><span class="s1">)</span>
+            <span class="s1">subprocess.call([</span><span class="s2">&quot;shutdown&quot;</span><span class="s0">, </span><span class="s2">&quot;/l&quot;</span><span class="s1">])</span>
+
+<span class="s1">time.sleep(</span><span class="s3">3</span><span class="s1">)</span>
+</pre>
+</body>
+</html>
